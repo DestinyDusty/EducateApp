@@ -1,23 +1,34 @@
 ﻿using EducateApp.Models;
 using EducateApp.ViewModels.Users;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace EducateApp.Controllers
 {
+    [Authorize(Roles = "admin")]
+    // теперь доступ ко всему контрроллеру будет доступен только администратору
+    // т.е. Панель администратора
     public class UsersController : Controller
     {
         UserManager<User> _userManager;
+        RoleManager<IdentityRole> _roleManager;
 
-        public UsersController(UserManager<User> userManager)
+        public UsersController(UserManager<User> userManager, RoleManager<IdentityRole> roleManager)
         {
             _userManager = userManager;
+            _roleManager = roleManager;
         }
 
+        // отображение списка пользователей
+        // действия для начальной страницы Index
         public IActionResult Index() => View(_userManager.Users.ToList());
 
+
+        // действия для создания пользователя Create
         public IActionResult Create() => View();
 
         [HttpPost]
@@ -49,6 +60,8 @@ namespace EducateApp.Controllers
             return View(model);
         }
 
+
+        // действия для изменения пользователя Edit
         public async Task<IActionResult> Edit(string id)
         {
             User user = await _userManager.FindByIdAsync(id);
@@ -98,6 +111,7 @@ namespace EducateApp.Controllers
             return View(model);
         }
 
+
         // действия для удаления пользователя Delete с подтверждением
         // GET: Users/Delete/5
         public async Task<ActionResult> Delete(string id)
@@ -123,7 +137,6 @@ namespace EducateApp.Controllers
             User user = await _userManager.FindByIdAsync(id);
             IdentityResult result = await _userManager.DeleteAsync(user);
             return RedirectToAction(nameof(Index));
-
         }
 
         public async Task<IActionResult> ChangePassword(string id)
@@ -133,7 +146,11 @@ namespace EducateApp.Controllers
             {
                 return NotFound();
             }
-            ChangePasswordViewModel model = new ChangePasswordViewModel { Id = user.Id, Email = user.Email };
+            ChangePasswordViewModel model = new ChangePasswordViewModel
+            {
+                Id = user.Id,
+                Email = user.Email
+            };
             return View(model);
         }
 
@@ -172,6 +189,56 @@ namespace EducateApp.Controllers
                 }
             }
             return View(model);
+        }
+
+        // так как роли задаются для каждого пользователя системы отдельно,
+        // то можно перенести методы работы с ними в контроллер Users, где мы можеи получить доступ ко всем пользователям системы
+        public async Task<IActionResult> EditRoles(string userId)
+        {
+            // получаем пользователя
+            User user = await _userManager.FindByIdAsync(userId);
+            if (user != null)
+            {
+                // получем список ролей пользователя
+                var userRoles = await _userManager.GetRolesAsync(user);
+                var allRoles = _roleManager.Roles.ToList();
+                ChangeRoleViewModel model = new ChangeRoleViewModel
+                {
+                    UserId = user.Id,
+                    UserEmail = user.Email,
+                    UserRoles = userRoles,
+                    AllRoles = allRoles
+                };
+                return View(model);
+            }
+
+            return NotFound();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> EditRoles(string userId, List<string> roles)
+        {
+            // получаем пользователя
+            User user = await _userManager.FindByIdAsync(userId);
+            if (user != null)
+            {
+                // получем список ролей пользователя
+                var userRoles = await _userManager.GetRolesAsync(user);
+                // получаем все роли
+                var allRoles = _roleManager.Roles.ToList();
+                // получаем список ролей, которые были добавлены
+                var addedRoles = roles.Except(userRoles);
+                // получаем роли, которые были удалены
+                var removedRoles = userRoles.Except(roles);
+
+                await _userManager.AddToRolesAsync(user, addedRoles);
+
+                await _userManager.RemoveFromRolesAsync(user, removedRoles);
+
+                return RedirectToAction(nameof(Index));
+            }
+
+            return NotFound();
         }
     }
 }
