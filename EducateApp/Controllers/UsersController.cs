@@ -111,7 +111,6 @@ namespace EducateApp.Controllers
             return View(model);
         }
 
-
         // действия для удаления пользователя Delete с подтверждением
         // GET: Users/Delete/5
         public async Task<ActionResult> Delete(string id)

@@ -17,8 +17,8 @@ namespace EducateApp.Models
             // обычно такие данные об администраторе хранятся с помощью разработки MS Azure,
             // но пользование данной системой бесплатно только год
 
-            string adminEmail = "dusty@mail.com";
-            string password = "55qq55qqQ123";
+            string adminEmail = "katedesu@mail.ru";
+            string password = "_Aa123456";
 
             if (await roleManager.FindByNameAsync("admin") == null)
             {
@@ -35,9 +35,9 @@ namespace EducateApp.Models
                 {
                     Email = adminEmail,
                     UserName = adminEmail,
-                    LastName = "Голдобин",
-                    FirstName = "Егор",
-                    Patronymic = "Павлович",
+                    LastName = "Петрова",
+                    FirstName = "Екатерина",
+                    Patronymic = "Сергеевна",
                     EmailConfirmed = true
                 };
 
