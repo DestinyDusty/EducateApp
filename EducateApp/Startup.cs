@@ -32,7 +32,8 @@ namespace EducateApp
 
 
             services.AddIdentity<User, IdentityRole>()
-                .AddEntityFrameworkStores<AppCtx>();
+                .AddEntityFrameworkStores<AppCtx>()
+                .AddDefaultTokenProviders();
 
             services.AddControllersWithViews();
         }
