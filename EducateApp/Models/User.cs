@@ -26,7 +26,7 @@ namespace EducateApp.Models
         //навигационные свойства
         [Required]
         public ICollection<FormOfStudy> FormsOfStudy { get; set; }
-        public ICollection<Disciplines> Disciplines { get; set; }
+        public ICollection<Discipline> Disciplines { get; set; }
         public ICollection<TypeOfTotal> TypesOfTotals { get; set; }
     }
 }

@@ -60,7 +60,7 @@ namespace EducateApp.Controllers
 
             if (ModelState.IsValid)
             {
-                Disciplines disciplines = new()
+                Discipline discipline = new()
                 {
                     IndexProfModule = model.IndexProfModule,
                     ProfModule = model.ProfModule,
@@ -70,7 +70,7 @@ namespace EducateApp.Controllers
                     IdUser = user.Id
                 };
 
-                _context.Add(disciplines);
+                _context.Add(discipline);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
@@ -85,21 +85,21 @@ namespace EducateApp.Controllers
                 return NotFound();
             }
 
-            var disciplines = await _context.Disciplines.FindAsync(id);
-            if (disciplines == null)
+            var discipline = await _context.Disciplines.FindAsync(id);
+            if (discipline == null)
             {
                 return NotFound();
             }
 
             EditDisciplinesViewModel model = new()
             {
-                Id = disciplines.Id,
-                IndexProfModule = disciplines.IndexProfModule,
-                ProfModule = disciplines.ProfModule,
-                Index = disciplines.Index,
-                Name = disciplines.Name,
-                ShortName = disciplines.ShortName,
-                IdUser = disciplines.IdUser
+                Id = discipline.Id,
+                IndexProfModule = discipline.IndexProfModule,
+                ProfModule = discipline.ProfModule,
+                Index = discipline.Index,
+                Name = discipline.Name,
+                ShortName = discipline.ShortName,
+                IdUser = discipline.IdUser
             };
 
 
@@ -111,9 +111,9 @@ namespace EducateApp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(short id, EditDisciplinesViewModel model)
         {
-            Disciplines disciplines = await _context.Disciplines.FindAsync(id);
+            Discipline discipline = await _context.Disciplines.FindAsync(id);
 
-            if (id != disciplines.Id)
+            if (id != discipline.Id)
             {
                 return NotFound();
             }
@@ -122,7 +122,9 @@ namespace EducateApp.Controllers
 
             if (_context.Disciplines
                 .Where(f => f.IdUser == user.Id &&
-                    f.Name == model.Name).FirstOrDefault() != null)
+                 f.IndexProfModule == model.IndexProfModule && f.ProfModule == model.ProfModule &&   
+                 f.Index == model.Index && f.Name == model.Name && f.ShortName == model.ShortName)
+                .FirstOrDefault() != null)
             {
                 ModelState.AddModelError("", "Введенный вид дисциплины уже существует");
             }
@@ -131,12 +133,18 @@ namespace EducateApp.Controllers
             {
                 try
                 {
-                    _context.Update(disciplines);
+                    discipline.IndexProfModule = model.IndexProfModule;
+                    discipline.ProfModule = model.ProfModule;
+                    discipline.Index = model.Index;
+                    discipline.Name = model.Name;
+                    discipline.ShortName = model.ShortName;
+
+                    _context.Update(discipline);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!DisciplinesExists(disciplines.Id))
+                    if (!DisciplinesExists(discipline.Id))
                     {
                         return NotFound();
                     }
@@ -158,15 +166,15 @@ namespace EducateApp.Controllers
                 return NotFound();
             }
 
-            var disciplines = await _context.Disciplines
+            var discipline = await _context.Disciplines
                 .Include(d => d.User)
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (disciplines == null)
+            if (discipline == null)
             {
                 return NotFound();
             }
 
-            return View(disciplines);
+            return View(discipline);
         }
 
         // POST: Disciplines/Delete/5
@@ -174,8 +182,8 @@ namespace EducateApp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(short id)
         {
-            var disciplines = await _context.Disciplines.FindAsync(id);
-            _context.Disciplines.Remove(disciplines);
+            var discipline = await _context.Disciplines.FindAsync(id);
+            _context.Disciplines.Remove(discipline);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
@@ -188,15 +196,15 @@ namespace EducateApp.Controllers
                 return NotFound();
             }
 
-            var disciplines = await _context.Disciplines
+            var discipline = await _context.Disciplines
                 .Include(d => d.User)
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (disciplines == null)
+            if (discipline == null)
             {
                 return NotFound();
             }
 
-            return View(disciplines);
+            return View(discipline);
         }
 
         private bool DisciplinesExists(short id)

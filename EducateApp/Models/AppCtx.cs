@@ -16,7 +16,7 @@ namespace EducateApp.Models
 
         public DbSet<TypeOfTotal> TypesOfTotals { get; set; }
 
-        public DbSet<EducateApp.Models.Data.Disciplines> Disciplines { get; set; }
+        public DbSet<Discipline> Disciplines { get; set; }
 
 
         public DbSet<Specialty> Specialties { get; set; }
