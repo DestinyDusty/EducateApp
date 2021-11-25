@@ -20,5 +20,7 @@ namespace EducateApp.Models
 
 
         public DbSet<Specialty> Specialties { get; set; }
+
+        public DbSet<Group> Groups { get; set; }
     }
 }
