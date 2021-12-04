@@ -1,8 +1,85 @@
-﻿@model IEnumerable<EducateApp.Models.Data.Discipline>
+﻿
+@model EducateApp.ViewModels.Disciplines.IndexDisciplineViewModel
 
 @{
     ViewData["Title"] = "Дисциплины";
 }
+
+@*            <div class="d-flex justify-content-between">
+        <div class="p-2">
+            <ul class="nav">
+                <li>
+                    <a class="btn text-dark" asp-action="DownloadPattern" title="Скачать шаблон">
+                        <i class="fas fa-file-download"></i>
+                    </a>
+                </li>
+                <li>
+                    <a class="btn text-dark" asp-action="Create">
+                        <i class="far fa-plus-square"></i>  Добавить дисциплину
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+
+    <div class="table-responsive">
+        <table class="table table-bordered text-nowrap table-sm">
+            <thead>
+                <tr>
+                    <th>
+                        @Html.DisplayNameFor(model => model.IndexProfModule)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.ProfModule)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Index)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Name)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.ShortName)
+                    </th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.IndexProfModule)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.ProfModule)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Index)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Name)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.ShortName)
+                        </td>
+                        <td>
+                            <a class="btn text-dark details" asp-action="Details" asp-route-id="@item.Id" title="Посмотреть подробнее">
+                                <i class="far fa-eye"></i>
+                            </a> |
+                            <a class="btn text-dark" asp-action="Edit" asp-route-id="@item.Id" title="Редактировать">
+                                <i class="fas fa-pencil-alt"></i>
+                            </a> |
+                            <a class="btn text-dark" asp-action="Delete" asp-route-id="@item.Id" title="Удалить">
+                                <i class="far fa-minus-square"></i>
+                            </a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>*@
 
 <nav aria-label="breadcrumb">
     <ol class="breadcrumb">
@@ -13,19 +90,13 @@
 
 <h2>Дисциплины</h2>
 
-<div id="modDialog" class="modal fade">
-    <div id="dialogContent" class="modal-dialog"></div>
-</div>
-
 <div class="d-flex justify-content-between">
-    <div class="p-2">
+    <div>
         <ul class="nav">
             <li>
                 <a class="btn text-dark" asp-action="DownloadPattern" title="Скачать шаблон">
                     <i class="fas fa-file-download"></i>
                 </a>
-            </li>
-            <li>
                 <a class="btn text-dark" asp-action="Create">
                     <i class="far fa-plus-square"></i>  Добавить дисциплину
                 </a>
@@ -33,32 +104,78 @@
         </ul>
     </div>
 </div>
-
+<div class="d-flex justify-content-between">
+    <div>
+        <form class="form-inline" asp-action="Index" method="get">
+            <div class="form-actions no-color">
+                <p>
+                    <input type="text" name="indexProfModule" placeholder="Индекс проф модуля" value="@Model.FilterDisciplineViewModel.SelectedIndexProfModule" class="form-control" />
+                    <input type="text" name="profModule" placeholder="Проф модуль" value="@Model.FilterDisciplineViewModel.SelectedProfModule" class="form-control" />
+                    <input type="text" name="index" placeholder="Индекс" value="@Model.FilterDisciplineViewModel.SelectedIndex" class="form-control" />
+                    <input type="text" name="name" placeholder="Дисциплина" value="@Model.FilterDisciplineViewModel.SelectedName" class="form-control" />
+                    <input type="text" name="shortName" placeholder="Краткое название" value="@Model.FilterDisciplineViewModel.SelectedShortName" class="form-control" />
+                    <input type="submit" value="Поиск" class="btn btn-outline-success" /> |
+                    <a class="=btn text-dark" asp-action="Index"><i class="fas fa-eraser"></i></a>
+                </p>
+            </div>
+        </form>
+    </div>
+</div>
 
 <div class="table-responsive">
     <table class="table table-bordered text-nowrap table-sm">
-        <thead>
+        <thead class="thead-light">
             <tr>
                 <th>
-                    @Html.DisplayNameFor(model => model.IndexProfModule)
+                    <a asp-action="Index"
+                       asp-route-sortOrder="@(Model.SortDisciplineViewModel.IndexProfModuleSort)"
+                       asp-route-indexProfModule="@(Model.FilterDisciplineViewModel.SelectedIndexProfModule)"
+                       asp-route-profModule="@(Model.FilterDisciplineViewModel.SelectedProfModule)"
+                       asp-route-index="@(Model.FilterDisciplineViewModel.SelectedIndex)"
+                       asp-route-name="@(Model.FilterDisciplineViewModel.SelectedName)"
+                       asp-route-shortName="@(Model.FilterDisciplineViewModel.SelectedShortName)">Индекс проф модуля</a>
                 </th>
                 <th>
-                    @Html.DisplayNameFor(model => model.ProfModule)
+                    <a asp-action="Index"
+                       asp-route-sortOrder="@(Model.SortDisciplineViewModel.IndexProfModuleSort)"
+                       asp-route-indexProfModule="@(Model.FilterDisciplineViewModel.SelectedIndexProfModule)"
+                       asp-route-profModule="@(Model.FilterDisciplineViewModel.SelectedProfModule)"
+                       asp-route-index="@(Model.FilterDisciplineViewModel.SelectedIndex)"
+                       asp-route-name="@(Model.FilterDisciplineViewModel.SelectedName)"
+                       asp-route-shortName="@(Model.FilterDisciplineViewModel.SelectedShortName)">Проф модуль</a>
                 </th>
                 <th>
-                    @Html.DisplayNameFor(model => model.Index)
+                    <a asp-action="Index"
+                       asp-route-sortOrder="@(Model.SortDisciplineViewModel.IndexProfModuleSort)"
+                       asp-route-indexProfModule="@(Model.FilterDisciplineViewModel.SelectedIndexProfModule)"
+                       asp-route-profModule="@(Model.FilterDisciplineViewModel.SelectedProfModule)"
+                       asp-route-index="@(Model.FilterDisciplineViewModel.SelectedIndex)"
+                       asp-route-name="@(Model.FilterDisciplineViewModel.SelectedName)"
+                       asp-route-shortName="@(Model.FilterDisciplineViewModel.SelectedShortName)">Индекс</a>
                 </th>
                 <th>
-                    @Html.DisplayNameFor(model => model.Name)
+                    <a asp-action="Index"
+                       asp-route-sortOrder="@(Model.SortDisciplineViewModel.IndexProfModuleSort)"
+                       asp-route-indexProfModule="@(Model.FilterDisciplineViewModel.SelectedIndexProfModule)"
+                       asp-route-profModule="@(Model.FilterDisciplineViewModel.SelectedProfModule)"
+                       asp-route-index="@(Model.FilterDisciplineViewModel.SelectedIndex)"
+                       asp-route-name="@(Model.FilterDisciplineViewModel.SelectedName)"
+                       asp-route-shortName="@(Model.FilterDisciplineViewModel.SelectedShortName)">Дисциплина</a>
                 </th>
                 <th>
-                    @Html.DisplayNameFor(model => model.ShortName)
+                    <a asp-action="Index"
+                       asp-route-sortOrder="@(Model.SortDisciplineViewModel.IndexProfModuleSort)"
+                       asp-route-indexProfModule="@(Model.FilterDisciplineViewModel.SelectedIndexProfModule)"
+                       asp-route-profModule="@(Model.FilterDisciplineViewModel.SelectedProfModule)"
+                       asp-route-index="@(Model.FilterDisciplineViewModel.SelectedIndex)"
+                       asp-route-name="@(Model.FilterDisciplineViewModel.SelectedName)"
+                       asp-route-shortName="@(Model.FilterDisciplineViewModel.SelectedShortName)">Краткое название</a>
                 </th>
                 <th></th>
             </tr>
         </thead>
         <tbody>
-            @foreach (var item in Model)
+            @foreach (var item in Model.Disciplines)
             {
                 <tr>
                     <td>
@@ -93,11 +210,67 @@
     </table>
 </div>
 
+<nav>
+    <ul class="pagination justify-content-center">
+        @if (Model.PageViewModel.HasPreviousPage || Model.PageViewModel.HasNextPage)
+        {
+            @if (Model.PageViewModel.HasPreviousPage)
+            {
+                <li class="page-item">
+                    <a class="page-link" asp-action="Index" title="Назад"
+                       asp-route-page="@(Model.PageViewModel.PageNumber - 1)"
+                       asp-route-sortOrder="@(Model.SortDisciplineViewModel.IndexProfModuleSort)"
+                       asp-route-indexProfModule="@(Model.FilterDisciplineViewModel.SelectedIndexProfModule)"
+                       asp-route-profModule="@(Model.FilterDisciplineViewModel.SelectedProfModule)"
+                       asp-route-index="@(Model.FilterDisciplineViewModel.SelectedIndex)"
+                       asp-route-name="@(Model.FilterDisciplineViewModel.SelectedName)"
+                       asp-route-shortName="@(Model.FilterDisciplineViewModel.SelectedShortName)">
+                        <i class="fas fa-chevron-left"></i>
+                    </a>
+                </li>
+            }
+            else
+            {
+                <li class="page-item disabled">
+                    <a class="page-link" href="#">
+                        <i class="fas fa-chevron-left"></i>
+                    </a>
+                </li>
+            }
+            @if (Model.PageViewModel.HasNextPage)
+            {
+                <li class="page-item">
+                    <a class="page-link" asp-action="Index" title="Вперед"
+                       asp-route-page="@(Model.PageViewModel.PageNumber + 1)"
+                       asp-route-sortOrder="@(Model.SortDisciplineViewModel.IndexProfModuleSort)"
+                       asp-route-indexProfModule="@(Model.FilterDisciplineViewModel.SelectedIndexProfModule)"
+                       asp-route-profModule="@(Model.FilterDisciplineViewModel.SelectedProfModule)"
+                       asp-route-index="@(Model.FilterDisciplineViewModel.SelectedIndex)"
+                       asp-route-name="@(Model.FilterDisciplineViewModel.SelectedName)"
+                       asp-route-shortName="@(Model.FilterDisciplineViewModel.SelectedShortName)">
+                        <i class="fas fa-chevron-right"></i>
+                    </a>
+                </li>
+            }
+            else
+            {
+                <li class="page-item disabled">
+                    <a class="page-link" href="#">
+                        <i class="fas fa-chevron-right"></i>
+                    </a>
+                </li>
+            }
+        }
+    </ul>
+</nav>
+
+
+
 @section scripts
 {
     <script type="text/javascript">
         $(function () {
-           $.ajaxSetup({ cache: false });
+            $.ajaxSetup({ cache: false });
             $(".details").click(function (e) {
                 e.preventDefault();
                 $.get(this.href, function (data) {

@@ -5,9 +5,9 @@ namespace EducateApp.ViewModels.Disciplines
 {
     public class IndexDisciplineViewModel
     {
-        public IEnumerable<Discipline> Desciplines { get; set; }
+        public IEnumerable<Discipline> Disciplines { get; set; }
         public PageViewModel PageViewModel { get; set; }
-        public FilterDisciplineViewModel FilterSpecialtyViewModel { get; set; }
-        public SortDisciplineViewModel SortSpecialtyViewModel { get; set; }
+        public FilterDisciplineViewModel FilterDisciplineViewModel { get; set; }
+        public SortDisciplineViewModel SortDisciplineViewModel { get; set; }
     }
 }
